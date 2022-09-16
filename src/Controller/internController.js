@@ -13,7 +13,7 @@ const isValidEmail = function (email) {
     return emailRegex.test(email)
 }
 const isValidMobile = function (mobile) {
-    var validmobile = /^((\+91)?|91)?[0-9]{10}$/;
+    var validmobile = /^((\+91)?|91)?[6789][0-9]{9}$/
     return validmobile.test(mobile);
 }
 const isValidName = function (name) {
@@ -26,7 +26,7 @@ const createIntern = async function (req, res) {
     try {
         let data = req.body
         let { name, email, mobile, collegeName } = data
-        if (Object.keys(data).length < 1) {
+        if (Object.keys(data).length < 0) {
             return res.status(400).send({ status: false, message: "Bad request" })
         }
         if (!isValid(name)) {
@@ -43,7 +43,7 @@ const createIntern = async function (req, res) {
         }
         let checkEmail = await InternModel.findOne({ email: email, isDeleted: false })
         if (checkEmail) {
-            return res.status(409).send({ status: false, message: "Email Already Registered" })
+            return res.status(400).send({ status: false, message: "Email Already Registered" })
         }
         if (!isValid(mobile)) {
             return res.status(400).send({ status: false, message: "Enter Valid Number" })
@@ -53,7 +53,7 @@ const createIntern = async function (req, res) {
         }
         let checkMobile = await InternModel.findOne({ mobile: mobile, isDeleted: false })
         if (checkMobile) {
-            return res.status(409).send({ status: false, message: "Mobile Already Registered" })
+            return res.status(400).send({ status: false, message: "Mobile Already Registered" })
         }
         if (!isValid(collegeName)) {
             return res.status(400).send({ status: false, message: "Enter a valid college name" })
